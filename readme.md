@@ -145,3 +145,20 @@
 ### Tabelas Lógicas
 
 ![relational](./src/diagrams/relational.png)
+
+### 5. Crie as tabelas Fato e Dimensão
+
+![dfDiagram](./src/diagrams/dfDiagram.png)
+
+### 6. Crie o Script SQL para criar a tabela FATO (Extract / Data Collection)
+
+```sql
+create table servico (
+    id_servico int not null primary key,
+    id_profissional int not null foreign key,
+    id_filial int not null foreign key,
+    descricao varchar(100) not null,
+    data datetime not null,
+    valor float not null
+)
+```
