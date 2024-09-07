@@ -147,11 +147,11 @@
 
 ### Tabelas Lógicas
 
-![relational](./src/diagrams/relational.png)
+![relational](src/diagrams/relational.png)
 
 ### 5. Crie as tabelas Fato e Dimensão
 
-![dfDiagram](./src/diagrams/dfDiagram.png)
+![dfDiagram](src/diagrams/dfDiagram.png)
 
 ### 6. Crie o Script SQL para criar a tabela FATO (Extract / Data Collection)
 
