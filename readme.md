@@ -3,6 +3,17 @@
 ### Universidade Presbiteriana Mackenzie
 ### Matéria: Data Collection & Storage
 
+
+## Integrantes
+
+|Nome               |
+|----               |
+|Gustavo Bido       |
+|João Pedro         |
+|Kayque Mendes      |
+|Vinícius Soares    |
+
+
 ## Proposta 
 1. Pense no nome do Domínio de informação e da Sigla
 2. Pense no modelo de negócio e crie os campos com nomes lógicos e físicos
