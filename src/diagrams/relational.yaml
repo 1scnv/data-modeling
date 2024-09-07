@@ -1,0 +1,35 @@
+tables:
+  servico:
+    "*id_servico": int()
+    "+id_cliente": int()
+    "+id_profissional": int()
+    "+id_filial": int()
+    "descricao": char()
+    "data": date()
+    "valor": float()
+  cliente:
+    "*id_cliente": int()
+    "nome": char()
+    "endereco": char()
+    "telefone": int()
+  profissional:
+    "*id_profissional": int()
+    "nome": char()
+    "cargo": char()
+  filial:
+    "*id_filial": int()
+    "endereco": char()
+    "telefone": int()
+    "+id_gerente": char()
+  gerente:
+    "*id_gerente": int()
+    "nome": char()
+    "telefone": int()
+    "+id_filial": int() 
+relations:
+- servico:id_cliente 1--1 cliente:id_cliente
+- servico:id_profissional 1--* profissional:id_profissional
+- servico:id_filial 1--1 filial:id_filial
+- filial:id_gerente 1--1 gerente:id_gerente
+rankAdjustments: ''
+label: '\n\n\n ERD Case2'
