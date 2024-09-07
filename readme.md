@@ -26,6 +26,7 @@
 |Lógico                 |   Físico          |   Chave   |
 |-----------------------|---------------    |:---------:|
 |Código do Serviço      |`id_servico`       |PK         |
+|Código do Cliente      |`id_cliente`       |FK         |
 |Código do Profissional |`id_profissional`  |FK         |
 |Filial executada       |`id_filial`        |FK         |
 |Descrição do Serviço   |`descricao`        |           |
@@ -65,33 +66,34 @@
 |Código do Gerente      |`id_gerente`       |PK         |
 |Nome do Gerente        |`nome`             |           |
 |Telefone do Gerente    |`cargo`            |           |
+|Código da Filial       |`id_filial`        |FK         |
 
 
 ### 3. Crie o Glossário de Dados
 
-|       Campo                   |   Descrição                       |
-|        --                     |       ---                         |
-|servico.id_servico             |Identificador único do serviço     |
-|servico.id_profissional        |Identificador único do profissional|
-|servico.id_cliente             |Identificador único do cliente     |
-|servico.id_filial              |Identificador único da filial      |
-|servico.descricao              |Descrição do serviço prestado      |
-|servico.data                   |Data do serviço prestado           |
-|servico.valor                  |Valor do serviço prestado          |
-|cliente.id_cliente             |Identificador único do cliente     |
-|cliente.nome                   |Nome do cliente                    |
-|cliente.endereco               |Endereço do cliente                |
-|cliente.telefone               |Telefone do cliente                |
-|profissional.id_profissional   |Identificador único do profissional|
-|profissional.nome              |Nome do Profissional               |
-|profissional.cargo             |Cargo do profissional              |
-|filial.id_filial               |Identificador único da filial      |
-|filial.endereco                |Endereço da filial                 |
-|filial.telefone                |Telefone da filial                 |
-|filial.id_gerente              |Identificador único do gerente     |
-|gerente.id_gerente             |Identificador único do gerente     |
-|gerente.nome                   |Nome do gerente                    |
-|gerente.telefone               |Telefone do gerente                |
+|          Nome Físico          |              Nome Lógico            |     Tipo de Valor    |             Descrição               |
+|              --               |                   --                |             --       |               ---                   |
+|servico.id_servico             | Identificador de Serviços  (PK)     | Int()                | Identificador único do serviço      |
+|servico.id_profissional        | Identificador de Profissional (FK)  | Int()                | Identificador único do profissional |
+|servico.id_cliente             | Identificador do Cliente (FK)       | Int()                | Identificador único do cliente      |
+|servico.id_filial              | Identificar de Filial (FK)          | Int()                | Identificador único da filial       |
+|servico.descricao              | Descrição do Serviço                | Char()               | Descrição do serviço prestado       |
+|servico.data                   | Data do Serviço                     | Data()               | Data do serviço prestado            |
+|servico.valor                  | Valor do Serviço                    | float()              | Valor do serviço prestado           |
+|cliente.id_cliente             | Identificador do Cliente (PK)       | Int()                | Identificador único do cliente      |
+|cliente.nome                   | Nome do Cliente                     | Char()               | Nome do cliente                     |
+|cliente.endereco               | Endereço do Cliente                 | Char()               | Endereço do cliente                 |
+|cliente.telefone               | Telefone do Cliente                 | Int()                | Telefone do cliente                 |
+|profissional.id_profissional   | Identificador de Profissional (PK)  | Int()                | Identificador único do profissional |
+|profissional.nome              | Nome do Profissinal                 | Char()               | Nome do Profissional                |
+|profissional.cargo             | Cargo do Profissional               | Char()               | Cargo do profissional               |
+|filial.id_filial               | Identificador da Filial             | Int()                | Identificador único da filial       |
+|filial.endereco                | Endereço da Filial                  | Char()               | Endereço da filial                  |
+|filial.telefone                | Telefone da Filial                  | Char()               | Telefone da filial                  |
+|filial.id_gerente              | Gerente da Filial (FK)              | Int()                | Identificador único do gerente      |
+|gerente.id_gerente             | Identificar de Gerentes (PK)        | Int()                | Identificador único do gerente      |
+|gerente.nome                   | Nome do Gerente                     | Char()               | Nome do gerente                     |
+|gerente.telefone               | Telefone do Gerente                 | Int()                | Telefone do gerente                 |
 
 ### 4. Desenhe as tabelas físicas e lógicas Relacionais com as (Chave PK e campos)
 
@@ -141,6 +143,7 @@
 |id_gerente         |int            |S  |N      |
 |nome               |varchar(50)    |N  |N      |
 |telefone           |int            |N  |N      |
+|id_filial          |int            |N  |N      |
 
 ### Tabelas Lógicas
 
@@ -153,12 +156,52 @@
 ### 6. Crie o Script SQL para criar a tabela FATO (Extract / Data Collection)
 
 ```sql
-create table servico (
-    id_servico int not null primary key,
-    id_profissional int not null foreign key,
-    id_filial int not null foreign key,
-    descricao varchar(100) not null,
-    data datetime not null,
-    valor float not null
+CREATE TABLE [fato_servico] (
+  [id_servico] integer PRIMARY KEY,
+  [id_cliente] integer,
+  [id_profissional] integer,
+  [id_filial] integer,
+  [descricao] nvarchar(255),
+  [data] date,
+  [valor] float
 )
+GO
+
+--Criação das dimensões
+CREATE TABLE [dim_cliente] (
+  [id_cliente] integer PRIMARY KEY,
+  [nome] nvarchar(255)
+)
+GO
+
+CREATE TABLE [dim_profissional] (
+  [id_profissional] integer PRIMARY KEY,
+  [nome] nvarchar(255)
+)
+GO
+
+CREATE TABLE [dim_filial] (
+  [id_filial] integer PRIMARY KEY,
+  [id_gerente] integer
+)
+GO
+
+CREATE TABLE [dim_gerente] (
+  [id_gerente] integer PRIMARY KEY,
+  [nome] nvarchar(255)
+)
+GO
+
+-- Adição das foreign keys
+ALTER TABLE [fato_servico] ADD FOREIGN KEY ([id_cliente]) REFERENCES [dim_cliente] ([id_cliente])
+GO
+
+ALTER TABLE [fato_servico] ADD FOREIGN KEY ([id_profissional]) REFERENCES [dim_profissional] ([id_profissional])
+GO
+
+ALTER TABLE [fato_servico] ADD FOREIGN KEY ([id_filial]) REFERENCES [dim_filial] ([id_filial])
+GO
+
+ALTER TABLE [dim_gerente] ADD FOREIGN KEY ([id_gerente]) REFERENCES [dim_filial] ([id_gerente])
+GO
 ```
